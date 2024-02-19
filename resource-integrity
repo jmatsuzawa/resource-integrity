@@ -1,0 +1,11 @@
+#!/bin/bash
+
+url=${1:?"${0} <URL> [sha256, sha384(default), sha512]"}
+digest=${2:-sha384}
+
+if [[ "${digest}" != sha256 && "${digest}" != sha384 && "${digest}" != sha512 ]]; then
+  echo "${0} <URL> [sha256, sha384(default), sha512]" 2>&1
+  exit 1
+fi
+
+echo "${digest}"-$(curl -s -L "${url}" | openssl dgst -"${digest}" -binary | openssl base64 -A)
